@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12 space-y-4">
+    <h1 class="text-4xl font-bold">Creation Organisation</h1>
+
+    <div class="flex flex-col space-y-4">
+      <form
+        method="POST"
+        class="flex flex-col space-y-4 w-1/2"
+        action="{{ url_for('create_organisation') }}"
+      >
+        <label for="name" class="text-lg font-semibold"
+          >Nom de l'organisation</label
+        >
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+          required
+        />
+        <p class="text-sm text-gray-500">
+          Le nom de l'organisation doit contenir entre 4 et 20 caractères sans
+          espace (chiffre, lettre, underscore, tiret)
+        </p>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          id="submitButton"
+          disabled
+        >
+          Créer
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("name");
+    const submitButton = document.querySelector('button[type="submit"]');
+
+    nameInput.addEventListener("input", function () {
+      const name = this.value;
+      const regex = /^[a-zA-Z0-9_-]{4,20}$/;
+
+      if (regex.test(name)) {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    });
+  });
+</script>
+
+{% endblock %}

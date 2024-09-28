@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "flask boiterplate",
+      "connectString": "postgresql://postgres:postgres@localhost:5432/ma_base"
+    }
+  ]
+}

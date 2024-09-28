@@ -1,0 +1,87 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="flex w-full h-screen justify-center items-center">
+  <div class="card bg-base-100 w-fit shadow-xl">
+    <div class="card-body">
+      <div class="flex flex-row items-center space-x-2">
+        <a href="{{ url_for('login') }}">
+          <button class="btn rounded-full hover:cursor-pointer btn-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-left"
+            >
+              <path d="m12 19-7-7 7-7" />
+            </svg>
+          </button>
+        </a>
+        <h2 class="card-title">Inscription</h2>
+      </div>
+      <form
+        method="POST"
+        class="flex flex-col space-y-2"
+        onsubmit="return validateForm()"
+      >
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ email }}"
+          required
+          class="input input-bordered w-full max-w-xs"
+        />
+
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="input input-bordered w-full max-w-xs"
+        />
+        <label for="confirm_password">Confirmation du mot de passe</label>
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          required
+          class="input input-bordered w-full max-w-xs"
+        />
+
+        <div class="card-actions justify-end">
+          <button class="btn btn-primary" type="submit" disabled>
+            Inscription
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function validateForm() {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm_password").value;
+    const submitButton = document.querySelector(".btn.btn-primary");
+    submitButton.disabled = true;
+    if (password !== confirmPassword) {
+      return false;
+    }
+    submitButton.disabled = false;
+    return true;
+  }
+  document.getElementById("password").addEventListener("input", validateForm);
+  document
+    .getElementById("confirm_password")
+    .addEventListener("input", validateForm);
+</script>
+
+{% endblock %}

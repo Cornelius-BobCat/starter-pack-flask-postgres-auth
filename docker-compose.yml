@@ -1,0 +1,28 @@
+name: flask-app
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ma_base
+    ports:
+      - "5432:5432"
+    networks:
+      - flask-app-network
+
+  web:
+    build:
+      context: app
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+    networks:
+      - flask-app-network
+
+networks:
+  flask-app-network:

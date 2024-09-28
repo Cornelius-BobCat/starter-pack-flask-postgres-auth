@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12 space-y-4">
+    <h1 class="text-4xl font-bold">Gestion des rôles</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date inscription</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Action</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for utilisateur in utilisateurs_et_roles %}
+        <tr>
+          <td>{{ utilisateur.date_inscription.strftime('%Y-%m-%d %H:%M:%S') if utilisateur.date_inscription else 'N/A' }}</td>
+          <td>{{ utilisateur.email }}</td>
+          <td>{{ utilisateur.role }}</td>
+          <td>
+            <form action="{{ url_for('update_role', utilisateur_id=utilisateur.id) }}" method="post" onsubmit="return false;">
+              <select name="role" class="form-select" onchange="this.form.submit();">
+                <option value="admin" {% if utilisateur.role == 'admin' %}selected{% endif %}>Admin</option>
+                <option value="orga" {% if utilisateur.role == 'orga' %}selected{% endif %}>Orga</option>
+                <option value="basic" {% if utilisateur.role == 'basic' %}selected{% endif %}>Basic</option>
+              </select>
+            </form>
+          </td>
+          <td>
+     
+            <form action="{{ url_for('update_status', utilisateur_id=utilisateur.id) }}" method="post">
+             <input type="checkbox" name="actif" class="toggle toggle-sm" {% if utilisateur.actif %}checked{% endif %} onchange="this.form.submit();" />
+            </form>
+  
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

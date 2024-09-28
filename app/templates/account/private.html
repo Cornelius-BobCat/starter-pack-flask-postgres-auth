@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12">
+    <h1 class="text-4xl font-bold">Mon compte</h1>
+    <p>
+      Vous êtes connecté. Ceci est une page réservée aux utilisateurs
+      authentifiés.
+    </p>
+  </div>
+</div>
+{% endblock %}

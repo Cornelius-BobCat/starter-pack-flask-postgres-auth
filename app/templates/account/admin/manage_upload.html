@@ -1,0 +1,103 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12 space-y-4">
+    <h1 class="text-4xl font-bold">Gestion des uploads</h1>
+      <form
+        method="post"
+        enctype="multipart/form-data"
+        action="{{ url_for('upload_file_form') }}"
+        class="flex flex-col space-y-4 w-full justify-center"
+      >
+      <div class="flex flex-row justify-center items-center space-x-4 w-1/2">
+      
+        <input type="file" class="file-input file-input-bordered w-full " name="files" multiple accept=".csv" required onchange="updateFileList()" />
+        <button type="submit" id="upload-button" disabled class="btn btn-primary">Upload</button> 
+        
+      </div>
+      <div class="progress" style="display: none;"> 
+          <div class="progress-bar" style="width: 0%" role="progressbar"></div>
+        </div>
+      </form>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom du fichier</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="file-list">
+        </tbody>
+      </table>
+      <script>
+        const form = document.querySelector("form");
+        const fileList = document.getElementById("file-list");
+        const progressBar = document.querySelector(".progress-bar");
+        const progressContainer = document.querySelector(".progress"); // Référence à la barre de progression
+
+        function updateFileList() {
+          const files = document.querySelector('input[type="file"]').files;
+          fileList.innerHTML = ""; // Réinitialiser la liste
+          Array.from(files).forEach(file => {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `<td>${file.name}</td>
+                                <td><button onclick="removeFile(this)">Supprimer</button></td>`;
+            fileList.appendChild(newRow);
+          });
+          
+          // Activer ou désactiver le bouton en fonction de la sélection de fichiers
+          const uploadButton = document.getElementById("upload-button");
+          uploadButton.disabled = files.length === 0; // Désactiver si aucun fichier
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", form.action, true);
+
+          // Afficher la barre de progression lors de la soumission
+          progressContainer.style.display = "block"; 
+
+          xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+              const percentComplete = (e.loaded / e.total) * 100;
+              progressBar.style.width = percentComplete + "%";
+            }
+          };
+
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              progressBar.style.width = "0%"; 
+              form.reset(); // Réinitialiser le formulaire après une soumission réussie
+              fileList.innerHTML = ""; // Réinitialiser la liste des fichiers
+              progressContainer.style.display = "none"; // Cacher la barre de progression
+            }
+          };
+
+          xhr.send(formData);
+        });
+
+        function removeFile(button) {
+          const row = button.parentNode.parentNode;
+          const fileName = row.firstChild.textContent; // Récupérer le nom du fichier
+          row.parentNode.removeChild(row);
+          
+          // Mettre à jour l'input file pour supprimer le fichier
+          const inputFile = document.querySelector('input[type="file"]');
+          const dataTransfer = new DataTransfer(); // Utiliser DataTransfer pour gérer les fichiers
+
+          // Ajouter les fichiers restants à DataTransfer
+          Array.from(inputFile.files).forEach(file => {
+            if (file.name !== fileName) {
+              dataTransfer.items.add(file);
+            }
+          });
+
+          inputFile.files = dataTransfer.files; // Mettre à jour l'input file
+        }
+      </script>
+    </div>
+  </div>
+</div>
+{% endblock %}

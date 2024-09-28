@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12 space-y-4">
+    <h1 class="text-4xl font-bold">Manage Organisation</h1>
+    <div class="space-y-2 flex flex-col">
+      <a href="{{ url_for('create_orga') }}">
+        <button class="btn">Creer une organisation</button>
+      </a>
+    </div>
+    <div class="space-y-2 flex flex-col">
+      <h2 class="text-2xl font-bold">Organisations</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        {% for org in organisations %}
+        <li>
+          {{ org.nom }}
+          <a
+            class="link link-info"
+            href="{{ url_for('edit_orga', org_id=org.id) }}"
+            >Manager cette organisation</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

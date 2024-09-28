@@ -1,0 +1,96 @@
+{% extends 'base.html' %} {% block content %} {% include 'nav.html' %}
+<div class="flex flex-row w-full space-x-4">
+  {% include 'account/nav.html' %}
+  <div class="flex flex-col w-9/12">
+    <h1 class="text-4xl font-bold">Paramètres</h1>
+    <p>
+      Vous êtes connecté. Ceci est une page réservée aux utilisateurs
+      authentifiés.
+    </p>
+    <form
+      method="POST"
+      action="{{ url_for('update_password') }}"
+      onsubmit="return validateForm()"
+      class="flex flex-col space-y-4 w-1/2"
+    >
+      <div class="flex flex-col space-y-4">
+        <label for="old_password" class="text-lg font-semibold"
+          >Ancien mot de passe</label
+        >
+        <input
+          type="password"
+          id="old_password"
+          name="old_password"
+          class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        />
+        <label for="new_password" class="text-lg font-semibold"
+          >Nouveau mot de passe</label
+        >
+        <input
+          type="password"
+          id="new_password"
+          name="new_password"
+          class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        />
+        <label for="confirm_password" class="text-lg font-semibold"
+          >Confirmer le mot de passe</label
+        >
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        />
+        <button
+          class="btn btn-primary"
+          type="submit"
+          disabled
+          id="update_password_button"
+        >
+          Mettre à jour le mot de passe
+        </button>
+      </div>
+    </form>
+    <div class="flex flex-col space-y-4 mt-4">
+      <h2 class="text-lg font-bold">Organisations</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        {% for org in organisations %}
+        <li>
+          {% if org.rootid %}
+          <p class="flex flex-row space-x-4">
+            <span class="font-bold">{{ org.nom }}</span>
+            <a
+              class="link link-primary"
+              href="{{ url_for('edit_orga', org_id=org.id) }}"
+              >Manager l'organisation</a
+            >
+          </p>
+          {% else %} {{ org.nom }} {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  function validateForm() {
+    const newPassword = document.getElementById("new_password").value;
+    const confirmPassword = document.getElementById("confirm_password").value;
+    const submitButton = document.getElementById("update_password_button");
+
+    if (newPassword !== confirmPassword) {
+      submitButton.disabled = true;
+    } else {
+      submitButton.disabled = false;
+    }
+  }
+
+  document
+    .getElementById("confirm_password")
+    .addEventListener("input", validateForm);
+  document
+    .getElementById("update_password_button")
+    .addEventListener("input", validateForm);
+</script>
+{% endblock %}

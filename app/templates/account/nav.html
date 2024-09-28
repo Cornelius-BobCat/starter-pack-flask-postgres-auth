@@ -1,0 +1,21 @@
+<nav class="flex flex-col space-y-4 px-4 w-2/12">
+  <a href="{{ url_for('private') }}" class="">Mon compte</a>
+  {% if current_user.role in ['admin', 'orga'] %}
+    <a href="{{ url_for('manage_orga') }}">Creer une organisation</a>
+  {% endif %}
+  {% if current_user.role in ['admin'] %}
+    <a href="{{ url_for('manage_role') }}">Gestion des rôles</a>
+    <a href="{{ url_for('manage_connecteur') }}">Gestion des connecteurs</a>
+    <a href="{{ url_for('manage_upload') }}">Gestion des uploads</a>
+  {% endif %}
+  <a href="{{ url_for('settings') }}" class="">Paramètres</a>
+  <a href="{{ url_for('logout') }}" class="">Déconnexion</a>
+  <p>
+  <div class="text-sm">
+    <p><b>Utilisateur connecté:</b> {{ current_user.email }}</p>
+    <p><b>Role:</b> {{ current_user.role }}</p>
+  <div class="text-sm">
+  </div>
+  </div>
+  </p>
+</nav>
